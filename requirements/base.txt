@@ -4,4 +4,6 @@ django==3.1.7  # https://github.com/django/django
 
 # Django REST Framework
 # ------------------------------------------------------------------------------
+djangorestframework==3.12.2  # https://github.com/encode/django-rest-framework
+djangorestframework-simplejwt==4.6.0  # https://github.com/SimpleJWT/django-rest-framework-simplejwt
 django-cors-headers==3.7.0 # https://github.com/adamchainz/django-cors-headers
