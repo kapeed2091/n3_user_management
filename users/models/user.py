@@ -2,6 +2,8 @@ from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
 
 from .abstract_datetime import AbstractDatetime
+from .permission import Permission
+from .user_permission import UserPermission
 
 
 class UserManager(BaseUserManager):
@@ -56,3 +58,30 @@ class User(AbstractUser, AbstractDatetime):
     REQUIRED_FIELDS = []
 
     objects = UserManager()
+
+    @classmethod
+    def create(cls, email, first_name, last_name, password, role):
+        user = cls.objects.create(
+            email=email, first_name=first_name, last_name=last_name, password=password
+        )
+        # Assumption that password is sent in encrypted form as configured in default Django settings
+        # https://docs.djangoproject.com/en/3.1/topics/auth/passwords/
+
+        permission = Permission.get_or_create(name=role)
+        UserPermission.get_or_create(user_id=user.id, permission_id=permission.id)
+
+        # TODO: Send verification email
+
+        return user
+
+    @classmethod
+    def sign_up(cls, email, first_name, last_name, password, role):
+        try:
+            cls.objects.get(email=email)
+            raise Exception("User with email: {} already exists".format(email))
+            # TODO: Move exception messages to common place
+            # TODO: Strings should be in I18N compatible format
+        except cls.DoesNotExist:
+            user = cls.create(email, first_name, last_name, password, role)
+
+        return user
