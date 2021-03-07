@@ -1,0 +1,518 @@
+{
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "bearerFormat": "JWT",
+        "scheme": "bearer",
+        "type": "http"
+      }
+    }
+  },
+  "definitions": {},
+  "info": {
+    "description": "powered by Flasgger",
+    "termsOfService": "",
+    "title": "Flapisk API Documentation",
+    "version": "0.0.1"
+  },
+  "openapi": "3.0.2",
+  "paths": {
+    "/api/auth/email-resend/{email}": {
+      "get": {
+        "description": "Resend verify email for sign up.",
+        "operationId": "signupEmailResend",
+        "parameters": [
+          {
+            "description": "Email used for sign up.",
+            "in": "path",
+            "name": "email",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Email sent"
+          },
+          "404": {
+            "description": "Email not found."
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        },
+        "summary": "Resend verify email",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/auth/email-update/{old_email}/{new_email}": {
+      "get": {
+        "description": "  ",
+        "operationId": "signupEmailUpdate",
+        "parameters": [
+          {
+            "description": "Email used for sign up.",
+            "in": "path",
+            "name": "old_email",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "New email for sign up.",
+            "in": "path",
+            "name": "new_email",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Email sent"
+          },
+          "404": {
+            "description": "Old email not found."
+          },
+          "409": {
+            "description": "New email already exist."
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        },
+        "summary": "  Update email used for sign up.",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/auth/refresh": {
+      "post": {
+        "description": "Refresh access token.",
+        "operationId": "tokenRefresh",
+        "responses": {
+          "204": {
+            "description": "Token refresh success"
+          },
+          "401": {
+            "description": "Refresh token not provided or invalid"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Refresh access token",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/auth/sign-in": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Authenticate user with supplied credentials.",
+        "operationId": "userSignin",
+        "produces": [
+          "application/json"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "example": {
+                "email": "user@mail.com",
+                "password": "secret"
+              },
+              "required": [
+                "email",
+                "password"
+              ],
+              "schema": {
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login success"
+          },
+          "400": {
+            "description": "Invalid password"
+          },
+          "403": {
+            "description": "User not verified"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        },
+        "summary": "Sign In",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/auth/sign-out": {
+      "post": {
+        "description": "Signout user.",
+        "operationId": "userSignout",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "204": {
+            "description": "Signout success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Sign out",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/auth/sign-up": {
+      "post": {
+        "description": "Signup with user information",
+        "operationId": "userSignup",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "example": {
+                  "email": "user@mail.com",
+                  "first_name": "Test",
+                  "last_name": "User",
+                  "password": "secret",
+                  "role": "User"
+                },
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  },
+                  "first_name": {
+                    "type": "string"
+                  },
+                  "last_name": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  },
+                  "role": {
+                    "enum": [
+                      "User",
+                      "Developer",
+                      "Admin"
+                    ],
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "email",
+                  "password",
+                  "role",
+                  "first_name",
+                  "last_name"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "description": "email and password must be specified.",
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Signup success"
+          },
+          "409": {
+            "description": "Conflict user"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        },
+        "summary": "Sign Up",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/auth/verify/{verifyToken}": {
+      "get": {
+        "description": "Verify email for sign up.",
+        "operationId": "signupVerify",
+        "parameters": [
+          {
+            "description": "Token in verification email sent for sign up.",
+            "in": "path",
+            "name": "verifyToken",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Email verify success"
+          },
+          "400": {
+            "description": "User already verified."
+          },
+          "404": {
+            "description": "Invalid or expired token."
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        },
+        "summary": "Verify email",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/profile": {
+      "get": {
+        "description": "Get logged in user's profile.",
+        "operationId": "getUserProfile",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized."
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Get profile",
+        "tags": [
+          "profile"
+        ]
+      },
+      "put": {
+        "description": "Update profile with user information",
+        "operationId": "profileUpdate",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "example": {
+                  "email": "user@mail.com",
+                  "first_name": "Test",
+                  "last_name": "User",
+                  "phone_number": "(234)567-8901",
+                  "role": "User"
+                },
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  },
+                  "first_name": {
+                    "type": "string"
+                  },
+                  "last_name": {
+                    "type": "string"
+                  },
+                  "phone_number": {
+                    "type": "string"
+                  },
+                  "role": {
+                    "enum": [
+                      "User",
+                      "Developer",
+                      "Admin"
+                    ],
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "email",
+                  "role"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "description": "email and role must be specified.",
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Profile updated"
+          },
+          "404": {
+            "description": "User not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Update profile",
+        "tags": [
+          "profile"
+        ]
+      }
+    },
+    "/api/profile/close": {
+      "post": {
+        "description": "Close account.",
+        "operationId": "closeAccount",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "example": {
+                  "email": "user@mail.com"
+                },
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "email"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "description": "Email must be specified.",
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "Account closed."
+          },
+          "404": {
+            "description": "User not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Close Account",
+        "tags": [
+          "profile"
+        ]
+      }
+    },
+    "/api/profile/password-reset": {
+      "post": {
+        "description": "Update old password with a new one.",
+        "operationId": "resetPassword",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "example": {
+                  "confirm_password": "new_secret",
+                  "current_password": "secret",
+                  "email": "user@mail.com",
+                  "new_password": "new_secret"
+                },
+                "properties": {
+                  "confirm_password": {
+                    "type": "string"
+                  },
+                  "current_password": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string"
+                  },
+                  "new_password": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "email",
+                  "current_password",
+                  "new_password",
+                  "confirm_password"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "description": "All fields must be specified.",
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Password updated."
+          },
+          "400": {
+            "description": "Current password incorrect or confirm password not match."
+          },
+          "404": {
+            "description": "User not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Password Reset",
+        "tags": [
+          "profile"
+        ]
+      }
+    }
+  }
+}
