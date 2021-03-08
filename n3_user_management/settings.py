@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/3.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -144,3 +144,11 @@ REST_FRAMEWORK = {
 }
 
 EMAIL_TOKEN_LIFE = 10 * 60
+
+AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID", "")
+AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY", "")
+AWS_REGION = os.environ.get("AWS_REGION", "eu-west-1")
+
+EMAIL_SENDER = os.environ["EMAIL_SENDER"]
+
+BASE_URL = os.environ.get("BASE_URL", "http://127.0.0.1:8000")

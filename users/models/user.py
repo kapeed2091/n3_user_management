@@ -1,5 +1,9 @@
+from django.conf import settings
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
+
+from users.token import token_generator
+from users.utils.send_email import send_email
 
 from .abstract_datetime import AbstractDatetime
 from .permission import Permission
@@ -70,9 +74,18 @@ class User(AbstractUser, AbstractDatetime):
         permission = Permission.get_or_create(name=role)
         UserPermission.get_or_create(user_id=user.id, permission_id=permission.id)
 
-        # TODO: Send verification email
+        cls.send_email(user)
 
         return user
+
+    @classmethod
+    def send_email(cls, user):
+        # TODO: What should be text for subject and body
+        subject = "Please verify your email"
+        body = "Click on the link: {base_url}/api/users/verify/{token}".format(
+            base_url=settings.BASE_URL, token=token_generator.make_token(user)
+        )
+        send_email(settings.EMAIL_SENDER, user.email, subject, body)
 
     @classmethod
     def sign_up(cls, email, first_name, last_name, password, role):
